@@ -36,6 +36,7 @@ body {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    flex: 1;
 }
 
 .logo-icon,
@@ -45,14 +46,11 @@ body {
 }
 
 .nav-links {
-    text-decoration: none;
-    color: #161616;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 40px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    flex: 1;
 }
 
 .nav-link {
@@ -67,10 +65,12 @@ body {
     color: #000;
 }
 
-.btn-buttons {
+.nav-buttons {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 16px;
+    flex: 1;
 }
 
 .btn-signin {
@@ -237,16 +237,19 @@ main {
 .problem-solution-container {
     max-width: 1120px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
     align-items: center;
+    justify-content: space-between;
 }
 
 .problems-side {
     display: flex;
     flex-direction: column;
     gap: 40px;
+    flex: 1;
+    min-width: 320px;
 }
 
 .problem-title {
@@ -296,6 +299,8 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1;
+    min-width: 320px;
 }
 
 .solution-card {
@@ -846,16 +851,27 @@ main {
 @media (max-width: 768px) {
     .nav-container {
         padding: 16px 20px;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .logo {
+        justify-content: center;
     }
 
     .logo-icon,
     .logo-text {
         width: auto;
-        height: 14px;
+        height: 18px;
     }
 
     .nav-links {
         gap: 20px;
+        /* 折叠菜单暂留空间：目前使用垂直堆叠展示 */
+    }
+
+    .nav-buttons {
+        justify-content: center;
     }
 
     .nav-link {
@@ -863,21 +879,20 @@ main {
     }
 
     .btn-signin {
-        font-size: 14px;;
+        font-size: 14px;
     }
 
     .btn-start {
         font-size: 14px;
-        padding: 10px 12px;
+        padding: 10px 16px;
     }
 
     .problem-solution-container {
-        display: block;
+        flex-direction: column;
     }
     .solution-side {
-        display: none;
-        visibility: hidden;
-        opacity: 0;
+        display: flex; /* 改回显示，因现已改为垂直排列，不再拥挤 */
+        width: 100%;
+        margin-top: 20px;
     }
-
 }
