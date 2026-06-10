@@ -1,0 +1,63 @@
+name: CD - Deploy to Azure Storage
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Azure Blob Storage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Display project files
+        run: |
+          echo "📦 准备部署以下文件："
+          ls -la
+          echo ""
+          echo "✅ 文件检查完成"
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Upload files to Azure Blob Storage
+        env:
+          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
+        run: |
+          echo "🚀 开始上传文件到 Azure Blob Storage..."
+          azcopy sync "." "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/\$web" \
+            --delete-destination=true \
+            --exclude-path=".git;.github" \
+            --exclude-pattern="*.md" \
+            --auth-mode=Login
+          echo "✅ 上传完成！"
+
+      - name: Display deployment result
+        run: |
+          echo "🎉 部署成功！"
+
+  check:
+    name: Check Website
+    runs-on: ubuntu-latest
+    needs: deploy
+
+    steps:
+      - name: Check website status
+        run: |
+          echo "🔍 检查网站是否可以访问..."
+          sleep 5
+          URL="${{ secrets.AZURE_STATIC_WEBSITE_URL }}"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          if [ $STATUS -eq 200 ]; then
+            echo "✅ 网站正常！(HTTP $STATUS)"
+            echo "🌐 访问: $URL"
+          else
+            echo "❌ 网站异常 (HTTP $STATUS)"
+            exit 1
+          fi
