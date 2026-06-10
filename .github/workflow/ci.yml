@@ -74,10 +74,10 @@ jobs:
 
       - name: Create deployment message
         run: |
-          echo "🚀 准备部署预览环境..."
+          echo "🚀 Prepare to deploy preview environment..."
           echo "分支: ${{ github.head_ref }}"
           echo "提交: ${{ github.sha }}"
-          echo "📝 这里可以集成 Netlify, Vercel 等部署服务"
+          echo "📝 Here can integrate Netlify, Vercel and other deployment services"
 
   # Job 4: security check
   security:
@@ -90,11 +90,11 @@ jobs:
 
       - name: Check for sensitive data
         run: |
-          echo "🔒 检查敏感信息..."
-          # 检查是否有API密钥acceeeKey，密码secret等
+          echo "🔒 Checking for sensitive information..."
+          # Check for API keys, passwords, and secrets
           if grep -r "API_KEY\|password\|secret" --include="*.js" --include="*.html" .; then
-            echo "⚠️  警告: 发现可能的敏感信息"
+            echo "⚠️  Warning: Possible sensitive information found"
             exit 1
           else
-            echo "✅ 未发现敏感信息"
+            echo "✅ No sensitive information found"
           fi

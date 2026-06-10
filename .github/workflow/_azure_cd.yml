@@ -16,10 +16,10 @@ jobs:
 
       - name: Display project files
         run: |
-          echo "📦 准备部署以下文件："
+          echo "📦 Prepare to deploy the following files:"
           ls -la
           echo ""
-          echo "✅ 文件检查完成"
+          echo "✅ File check completed"
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -30,17 +30,17 @@ jobs:
         env:
           AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT }}
         run: |
-          echo "🚀 开始上传文件到 Azure Blob Storage..."
+          echo "🚀 Starting to upload files to Azure Blob Storage..."
           azcopy sync "." "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/\$web" \
             --delete-destination=true \
             --exclude-path=".git;.github" \
             --exclude-pattern="*.md" \
             --auth-mode=Login
-          echo "✅ 上传完成！"
+          echo "✅ Upload completed!"
 
       - name: Display deployment result
         run: |
-          echo "🎉 部署成功！"
+          echo "🎉 Deployment successful!"
 
   check:
     name: Check Website
@@ -50,14 +50,14 @@ jobs:
     steps:
       - name: Check website status
         run: |
-          echo "🔍 检查网站是否可以访问..."
+          echo "🔍 Checking website accessibility..."
           sleep 5
           URL="${{ secrets.AZURE_STATIC_WEBSITE_URL }}"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
           if [ $STATUS -eq 200 ]; then
-            echo "✅ 网站正常！(HTTP $STATUS)"
-            echo "🌐 访问: $URL"
+            echo "✅ Website is accessible! (HTTP $STATUS)"
+            echo "🌐 Visit: $URL"
           else
-            echo "❌ 网站异常 (HTTP $STATUS)"
+            echo "❌ Website is not accessible (HTTP $STATUS)"
             exit 1
           fi

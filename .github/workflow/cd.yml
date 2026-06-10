@@ -19,10 +19,10 @@ jobs:
 
       - name: Display project files
         run: |
-          echo "📦 准备部署以下文件："
+          echo "📦 Prepare to deploy the following files:"
           ls -la
           echo ""
-          echo "✅ 文件检查完成"
+          echo "✅ File check completed"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -33,17 +33,17 @@ jobs:
 
       - name: Upload files to S3
         run: |
-          echo "🚀 开始上传文件到S3..."
+          echo "🚀 Starting to upload files to S3..."
           aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }}/ \
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*" \
             --exclude "*.md"
-          echo "✅ 上传完成！"
+          echo "✅ Upload completed!"
 
       - name: Display deployment result
         run: |
-          echo "🎉 部署成功！"
+          echo "🎉 Deployment successful!"
 
   check:
     name: Check Website
@@ -53,14 +53,14 @@ jobs:
     steps:
       - name: Check website status
         run: |
-          echo "🔍 检查网站是否可以访问..."
+          echo "🔍 Checking website accessibility..."
           sleep 5
           URL="http://${{ secrets.S3_BUCKET_NAME }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" $URL)
           if [ $STATUS -eq 200 ]; then
-            echo "✅ 网站正常！(HTTP $STATUS)"
-            echo "🌐 访问: $URL"
+            echo "✅ Website is accessible! (HTTP $STATUS)"
+            echo "🌐 Visit: $URL"
           else
-            echo "❌ 网站异常 (HTTP $STATUS)"
+            echo "❌ Website is not accessible (HTTP $STATUS)"
             exit 1
           fi
